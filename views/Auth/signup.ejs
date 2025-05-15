@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up | DocOnTime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/views/assets/logo-01.png">
+  <!-- TailwindCSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen flex items-center justify-center">
+
+  <div class="bg-white shadow-2xl rounded-3xl px-10 py-8 w-full max-w-lg">
+    
+    <!-- Logo and Heading -->
+    <div class="text-center mb-4">
+      <img src="/views/assets/logo-01.png" alt="DocOnTime Logo" class="mx-auto w-16 h-16 mb-2">
+      <h1 class="text-2xl font-bold text-blue-700">DocOnTime</h1>
+    </div>
+
+    <h2 class="text-2xl font-bold text-blue-800 mb-4 text-center">Create Your Account</h2>
+
+    <form action="/user/register" method="POST" class="space-y-4">
+
+      <!-- Full Name -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
+        <input type="text" name="name" value="<%= oldInput?.name || '' %>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <% if (errors?.name) { %>
+          <p class="text-red-600 text-sm mt-1"><%= errors.name %></p>
+        <% } %>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+        <input type="email" name="email" value="<%= oldInput?.email || '' %>" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+        <% if (errors?.email) { %>
+          <p class="text-red-600 text-sm mt-1"><%= errors.email %></p>
+        <% } %>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+        <div class="relative">
+          <input 
+            type="password" 
+            name="password" 
+            id="signupPassword" 
+            class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+            required
+          >
+          <!-- Toggle Icon -->
+          <div 
+            onclick="togglePassword()" 
+            class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 hover:text-blue-600"
+          >
+            <!-- Eye (show) -->
+            <svg id="eyeIcon" class="h-5 w-5 block" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 3c-4.418 0-8 3.134-8 7s3.582 7 8 7 8-3.134 8-7-3.582-7-8-7zm0 12a5 5 0 100-10 5 5 0 000 10z"/>
+              <path d="M10 7a3 3 0 100 6 3 3 0 000-6z"/>
+            </svg>
+            <!-- Eye Off (hide) -->
+            <svg id="eyeOffIcon" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M3.172 3.172a.75.75 0 011.06 0l16.596 16.596a.75.75 0 01-1.06 1.06l-2.396-2.396A10.978 10.978 0 0112 21c-5.523 0-10-4.03-10-9 0-1.667.656-3.197 1.732-4.364L3.172 4.232a.75.75 0 010-1.06zM12 19c1.662 0 3.196-.453 4.474-1.238L13.1 14.537a3.5 3.5 0 01-4.6-4.6L6.967 8.404A8.98 8.98 0 004 12c0 4.418 3.582 8 8 8zm8-8c0-4.418-3.582-8-8-8-1.385 0-2.63.467-3.536 1.238l1.311 1.311a5 5 0 016.3 6.3l1.311 1.311A7.978 7.978 0 0020 12z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+        </div>
+        <% if (errors?.password) { %>
+          <p class="text-red-600 text-sm mt-1"><%= errors.password %></p>
+        <% } %>
+      </div>
+
+      <!-- Role -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">Role</label>
+        <select name="role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+          <option value="">Select Role</option>
+          <option value="doctor" <%= oldInput?.role === 'doctor' ? 'selected' : '' %>>Doctor</option>
+          <option value="patient" <%= oldInput?.role === 'patient' ? 'selected' : '' %>>Patient</option>
+        </select>
+        <% if (errors?.role) { %>
+          <p class="text-red-600 text-sm mt-1"><%= errors.role %></p>
+        <% } %>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition-all duration-200">
+        Sign Up
+      </button>
+    </form>
+
+    <!-- Login Redirect -->
+    <p class="text-center text-sm mt-4 text-gray-600">
+      Already have an account?
+      <a href="/user/login" class="text-blue-600 hover:underline font-medium">Log in</a>
+    </p>
+  </div>
+
+  <!-- Password Toggle Script -->
+  <!-- External Script -->
+   <script>
+    function togglePassword() {
+    const input = document.getElementById("signupPassword");
+    const eye = document.getElementById("eyeIcon");
+    const eyeOff = document.getElementById("eyeOffIcon");
+  
+    const isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+    eye.classList.toggle("hidden", !isPassword);
+    eyeOff.classList.toggle("hidden", isPassword);
+    }
+  
+   </script>
+</body>
+</html>

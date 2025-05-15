@@ -1,0 +1,33 @@
+<nav class="bg-blue-600 dark:bg-gray-800 text-white p-4 fixed w-full top-0 shadow-lg z-50">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <img src="/views/assets/logo-01.png" alt="DocOnTime Logo" class="w-10 h-10 rounded-full bg-white p-1 shadow-md" />
+            <h1 class="text-white text-3xl font-extrabold tracking-wide hover:text-blue-400 transition duration-300 hover:drop-shadow-md">
+              DocOnTime
+            </h1>
+          </div>
+        <div class="hidden md:flex space-x-6">
+            <a href="/home" class="text-white hover:text-blue-400 transition duration-300 hover:drop-shadow-md">Home</a>
+            <a href="/nav/doctors" class="text-white hover:text-blue-400 transition duration-300 hover:drop-shadow-md">Doctors</a>
+            <a href="/app/appointment" class="text-white hover:text-blue-400 transition duration-300 hover:drop-shadow-md">Book Appointment</a>
+            <a href="/symptom-checker" class="text-white hover:text-blue-400 transition duration-300 hover:drop-shadow-md">AI Symptom Checker</a>
+            <a href="/nav/contact" class="text-white hover:text-blue-400 transition duration-300 hover:drop-shadow-md">Contact Us</a>
+            <% if (hasVideoAppointment && videoCallLink) { %>
+                <a href="<%= videoCallLink %>" class="text-yellow-300 font-semibold hover:text-yellow-400 transition">📹 Join Video Call</a>
+            <% } %>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button  id="theme-toggle" class="text-xl">🌙</button>
+            <% if (currentUser) { %>
+                <div class="relative">
+                    <button onclick="document.getElementById('profileDropdown').classList.toggle('hidden')" class="text-lg font-semibold">👤</button>
+                    <div id="profileDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 text-black dark:text-white rounded-lg shadow-lg hidden">
+                        <a href="patients/profile" class="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Profile</a>
+                        <a href="/settings" class="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Settings</a>
+                        <a href="/user/logout" class="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Logout</a>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</nav>

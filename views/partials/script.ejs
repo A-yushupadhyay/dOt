@@ -1,0 +1,115 @@
+<script>
+    // Dark Mode Toggle
+      // Dark Mode Toggle
+      function setTheme(theme) {
+    if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+        console.log("set Theme to Dark" , localStorage.getItem("theme"));
+        document.getElementById("theme-toggle").textContent = "☀️"; // Light mode icon
+    } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+        document.getElementById("theme-toggle").textContent = "🌙"; // Dark mode icon
+    }
+}
+
+// Toggle Theme on Button Click
+document.getElementById("theme-toggle").addEventListener("click", () => {
+    const currentTheme = localStorage.getItem("theme") === "dark" ? "light" : "dark";
+    setTheme(currentTheme);
+});
+
+// Set Theme on Page Load (One-Time Setup)
+document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedTheme) {
+        setTheme(savedTheme); // Use saved theme
+    } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        setTheme("dark"); // Auto-detect system theme on first visit
+    } else {
+        setTheme("light");
+    }
+});
+ 
+
+
+// Search Doctor
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("search-input");
+    const searchResults = document.getElementById("search-results");
+
+    searchInput.addEventListener("input", async function () {
+        const query = searchInput.value.trim();
+        if (query.length === 0) {
+            searchResults.innerHTML = "";
+            searchResults.classList.add("hidden");
+            return;
+        }
+
+        // Fetch data from the server
+        const response = await fetch(`/doctors/search?query=${query}`);
+        const doctors = await response.json();
+
+        if (doctors.length > 0) {
+            searchResults.innerHTML = doctors.map(doctor => `
+                 <li class="p-3 border-b border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer text-left"
+                  onclick="location.href='/doctors/${doctor._id}'">
+                 <strong>${doctor.name}</strong> - ${doctor.specialty} (${doctor.consultationType})
+                 </li>
+                `).join("");
+            searchResults.classList.remove("hidden");
+            searchResults.style.display = "block"; // ✅ Ensure visibility
+        } else {
+            searchResults.innerHTML = `<li class="p-3 text-gray-500">No results found</li>`;
+            searchResults.classList.remove("hidden");
+            searchResults.style.display = "block"; // ✅ Ensure visibility
+        }
+    });
+});
+ // Establish socket connection
+ const socket = io();
+
+// Listen for reminder event from server
+socket.on("reminder", (data) => {
+// Check if the user is logged in (EJS version)
+const isLoggedIn = "<%= currentUser ? 'true' : 'false' %>"; 
+
+if (isLoggedIn === "true") {
+      Swal.fire({
+          title: "⏰ Appointment Reminder",
+          text: data.message, // Use the message from the backend
+          icon: "info",
+          showCancelButton: true,
+        confirmButtonText: "Join Video Call",
+        cancelButtonText: "OK"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Redirect to video call URL
+            window.location.href = data.videoCallURL;
+        }
+    });
+  }
+});
+
+/// Welcome Popup Modal
+
+</script>
+<% if (currentUser && showWelcome) { %>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const closeBtn = document.getElementById('closeModalBtn');
+          if (closeBtn) {
+            closeBtn.addEventListener('click', function () {
+              // Hide modal
+              document.getElementById('customWelcomeModal').style.display = 'none';
+              
+              // Set a cookie to not show modal again
+              document.cookie = "welcomeShown=true; path=/; max-age=31536000"; // 1 year
+            });
+          }
+        });
+      </script>
+<% } %>

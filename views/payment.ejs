@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/views/assets/logo-01.png">
+  <title>Payment On DocOnTime</title>
+  <style>
+    .payment-container {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .payment-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .payment-details {
+      font-size: 18px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .payment-details p {
+      margin: 8px 0;
+    }
+
+    strong {
+      color: #000;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .pay-button {
+      background: #007bff;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease-in-out, transform 0.2s ease;
+      box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.3);
+    }
+
+    .pay-button:hover {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
+
+    .pay-button:active {
+      background: #004080;
+      transform: scale(0.98);
+    }
+
+    .cancel-button {
+      background-color: red;
+    }
+
+    .cancel-button:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-container">
+    <h2 class="payment-title">Complete Your Payment</h2>
+    <div class="payment-details">
+      <p><strong>Doctor:</strong> <%= appointment.doctor.name %></p>
+      <p><strong>Fee:</strong> ₹<%= appointment.doctor.fee %></p>
+    </div>
+
+    <div class="button-row">
+      <form id="paymentForm">
+        <input type="hidden" name="appointmentId" value="<%= appointment._id %>">
+        <input type="hidden" name="amount" value="<%= appointment.doctor.fee %>">
+        <button type="submit" class="pay-button">Pay Now</button>
+      </form>
+
+      <form action="/app/payment/cancel" method="POST">
+        <input type="hidden" name="appointmentId" value="<%= appointment._id %>">
+        <button type="submit" class="pay-button cancel-button">Cancel Appointment</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("paymentForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      fetch("http://localhost:8000/app/payment/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          appointmentId: document.querySelector('input[name="appointmentId"]').value.trim(),
+          amount: parseFloat(document.querySelector('input[name="amount"]').value)
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log("frontend data ", data);
+          window.location.href = `/app/payment/process?orderId=${data.orderId}`;
+        } else {
+          alert("Error initiating payment.");
+        }
+      })
+      .catch(error => console.error("Error:", error));
+    });
+  </script>
+</body>
+</html>

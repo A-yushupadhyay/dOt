@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/views/assets/logo-01.png">
+    <title>Processing Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h2>Processing Payment...</h2>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get("orderId");
+
+        fetch(`http://localhost:8000/app/payment/details?orderId=${orderId}`)
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data);
+                if (data.success) {
+                    const options = {
+                        key: data.razorpayKey,
+                        amount: data.amount,
+                        currency: "INR",
+                        name: "DocOnTime",
+                        description: "Doctor Appointment Payment",
+                        order_id: data.orderId,
+                        handler: function (response) {
+                            fetch("http://localhost:8000/app/payment/verify", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    appointmentId: data.appointmentId,
+                                    paymentId: response.razorpay_payment_id
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(result => {
+                                if (result.success) {
+                                    window.location.href = `/app/payment/appointment-success?appointmentId=${data.appointmentId}`;
+                                } else {
+                                    alert("Payment verification failed!");
+                                }
+                            });
+                        },
+                        prefill: { email: data.email },
+                        theme: { color: "#3399cc" }
+                    };
+
+                    const rzp = new Razorpay(options);
+                    rzp.open();
+                } else {
+                    alert("Error retrieving payment details.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    </script>
+</body>
+</html>

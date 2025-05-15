@@ -1,0 +1,139 @@
+<% layout('layout/doctorLayout') %>
+
+<div class="container py-5">
+  <div class="bg-white shadow rounded-4 p-4 p-md-5 mx-auto" style="max-width: 760px;">
+    <h2 class="text-center text-success fw-bold mb-4">➕ Add Doctor</h2>
+
+    <form action="/doctors/add" method="POST" enctype="multipart/form-data">
+      <!-- Doctor Name -->
+      <div class="mb-3">
+        <label for="name" class="form-label">Doctor Name</label>
+        <input type="text" id="name" name="name" value="<%= doctorData?.name || '' %>" class="form-control" required>
+        <% if (error?.details?.find(e => e.context.key === 'name')) { %>
+          <p class="text-danger small"><%= error.details.find(e => e.context.key === 'name').message %></p>
+        <% } %>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" name="email" value="<%= doctorData?.email || '' %>" class="form-control" required>
+        <% if (error?.details?.find(e => e.context.key === 'email')) { %>
+          <p class="text-danger small"><%= error.details.find(e => e.context.key === 'email').message %></p>
+        <% } %>
+      </div>
+
+      <!-- Phone -->
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="text" id="phone" name="phone" value="<%= doctorData?.phone || '' %>" class="form-control" required>
+        <% if (error?.details?.find(e => e.context.key === 'phone')) { %>
+          <p class="text-danger small"><%= error.details.find(e => e.context.key === 'phone').message %></p>
+        <% } %>
+      </div>
+
+      <!-- Profile Image -->
+      <div class="mb-3">
+        <label for="image" class="form-label">Profile Image</label>
+        <input type="file" id="image" name="image" accept="image/*" class="form-control">
+      </div>
+
+      <!-- Specialty -->
+      <div class="mb-3">
+        <label for="specialty" class="form-label">Specialty</label>
+        <input type="text" id="specialty" name="specialty" value="<%= doctorData?.specialty || '' %>" class="form-control" required>
+        <% if (error?.details?.find(e => e.context.key === 'specialty')) { %>
+          <p class="text-danger small"><%= error.details.find(e => e.context.key === 'specialty').message %></p>
+        <% } %>
+      </div>
+
+      <!-- Experience -->
+      <div class="mb-3">
+        <label for="experience" class="form-label">Experience (Years)</label>
+        <input type="number" id="experience" name="experience" value="<%= doctorData?.experience || '' %>" class="form-control" required>
+        <% if (error?.details?.find(e => e.context.key === 'experience')) { %>
+          <p class="text-danger small"><%= error.details.find(e => e.context.key === 'experience').message %></p>
+        <% } %>
+      </div>
+
+      <!-- Consultation Type -->
+      <div class="mb-3">
+        <label for="consultationType" class="form-label">Consultation Type</label>
+        <select id="consultationType" name="consultationType" class="form-select" required>
+          <option value="in-person" <%= doctorData?.consultationType === 'in-person' ? 'selected' : '' %>>In-Person</option>
+          <option value="video" <%= doctorData?.consultationType === 'video' ? 'selected' : '' %>>Video</option>
+        </select>
+        <% if (error?.details?.find(e => e.context.key === 'consultationType')) { %>
+          <p class="text-danger small"><%= error.details.find(e => e.context.key === 'consultationType').message %></p>
+        <% } %>
+      </div>
+
+      <!-- Fee -->
+      <div class="mb-3">
+        <label for="fee" class="form-label">Consultation Fee (₹)</label>
+        <input type="number" id="fee" name="fee" value="<%= doctorData?.fee || '' %>" class="form-control" required>
+        <% if (error?.details?.find(e => e.context.key === 'fee')) { %>
+          <p class="text-danger small"><%= error.details.find(e => e.context.key === 'fee').message %></p>
+        <% } %>
+      </div>
+
+      <!-- Available Slots -->
+      <div class="mb-4">
+        <label class="form-label">Available Slots</label>
+        <p class="text-muted small">Select available time slots for booking:</p>
+        <div class="d-flex gap-2 mb-2">
+          <input type="datetime-local" id="slotInput" class="form-control">
+          <button type="button" class="btn btn-outline-primary" onclick="addSlot()">Add Slot</button>
+        </div>
+        <ul id="slotList" class="list-group mb-2"></ul>
+        <input type="hidden" name="availableSlots" id="availableSlots" value='<%= JSON.stringify(doctorData?.availableSlots || []) %>'>
+        <% if (error?.details?.find(e => e.context.key === 'availableSlots')) { %>
+          <p class="text-danger small"><%= error.details.find(e => e.context.key === 'availableSlots').message %></p>
+        <% } %>
+      </div>
+
+      <!-- Submit -->
+      <div class="text-center">
+        <button type="submit" class="btn btn-success px-4 shadow-sm fw-semibold">➕ Add Doctor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  let slots = typeof doctorData !== 'undefined' && Array.isArray(doctorData.availableSlots)
+    ? [...doctorData.availableSlots]
+    : [];
+
+  const slotList = document.getElementById('slotList');
+  const availableSlotsInput = document.getElementById('availableSlots');
+
+  function renderSlots() {
+    slotList.innerHTML = '';
+    slots.forEach(slot => {
+      const listItem = document.createElement('li');
+      listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+      listItem.innerHTML = `${slot} 
+        <button type="button" class="btn btn-sm btn-danger" onclick="removeSlot('${slot}')">Remove</button>`;
+      slotList.appendChild(listItem);
+    });
+    availableSlotsInput.value = JSON.stringify(slots);
+  }
+
+  function addSlot() {
+    const slotInput = document.getElementById('slotInput');
+    if (slotInput.value && !slots.includes(slotInput.value)) {
+      slots.push(slotInput.value);
+      renderSlots();
+      slotInput.value = '';
+    }
+  }
+
+  function removeSlot(slot) {
+    slots = slots.filter(s => s !== slot);
+    renderSlots();
+  }
+
+  // On load
+  renderSlots();
+</script>

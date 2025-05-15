@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/views/assets/logo-01.png">
+    <title>take reciept</title>
+    <link rel="stylesheet" href="/views/css/reciept.css">
+</head>
+<body>
+    <div class="receipt-container">
+        <h2>Appointment Receipt</h2>
+        <div class="receipt-details">
+            <p><strong>Patient Name:</strong> <%= appointment.patient.name %></p>
+            <p><strong>Doctor Name:</strong> <%= appointment.doctor.name %></p>
+            <p><strong>Specialty:</strong> <%= appointment.doctor.specialty %></p>
+            <p><strong>Consultation Type:</strong> <%= appointment.doctor.consultationType %></p>
+            <p><strong>Appointment Date:</strong> <%= new Date(appointment.date).toLocaleString() %></p>
+            <p><strong>Fee:</strong> $<%= appointment.doctor.fee %></p>
+            <p><strong>Status:</strong> <%= appointment.status %></p>
+        </div>
+
+        <button class="print-btn" onclick="printAndRedirect()">Print Receipt</button>
+    </div>
+
+<script>
+    function printAndRedirect() {
+        window.print();  // Trigger the print function
+        setTimeout(() => {
+            window.location.href = "/refresh-home";  // Redirect to home after a delay
+        }, 2000);  // 2 seconds delay to allow print dialog to open
+    }
+</script>
+    
+</body>
+</html>

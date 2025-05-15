@@ -1,0 +1,67 @@
+<% layout('layout/doctorLayout') %>
+
+<h2 class="text-center text-primary fw-bold mb-4">✏️ Edit Profile</h2>
+
+<form action="/doctors/<%= doctor._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+  <!-- Image Upload -->
+  <div class="mb-3 text-center">
+    <img src="<%= doctor.image %>" alt="Doctor Image" class="rounded-circle shadow mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+    <input type="file" name="image" class="form-control">
+    <% if (error?.details?.find(e => e.context.key === 'image')) { %>
+      <p class="text-danger text-sm mt-1"><%= error.details.find(e => e.context.key === 'image').message %></p>
+    <% } %>
+  </div>
+
+  <!-- Name -->
+  <div class="mb-3">
+    <label for="name" class="form-label fw-semibold">Full Name</label>
+    <input type="text" class="form-control" name="name" id="name" value="<%= doctor.name %>" required>
+    <% if (error?.details?.find(e => e.context.key === 'name')) { %>
+      <p class="text-danger text-sm mt-1"><%= error.details.find(e => e.context.key === 'name').message %></p>
+    <% } %>
+  </div>
+
+  <!-- Specialty -->
+  <div class="mb-3">
+    <label for="specialty" class="form-label fw-semibold">Specialty</label>
+    <input type="text" class="form-control" name="specialty" id="specialty" value="<%= doctor.specialty %>" required>
+    <% if (error?.details?.find(e => e.context.key === 'specialty')) { %>
+      <p class="text-danger text-sm mt-1"><%= error.details.find(e => e.context.key === 'specialty').message %></p>
+    <% } %>
+  </div>
+
+  <!-- Experience -->
+  <div class="mb-3">
+    <label for="experience" class="form-label fw-semibold">Experience (years)</label>
+    <input type="number" class="form-control" name="experience" id="experience" value="<%= doctor.experience %>" required>
+    <% if (error?.details?.find(e => e.context.key === 'experience')) { %>
+      <p class="text-danger text-sm mt-1"><%= error.details.find(e => e.context.key === 'experience').message %></p>
+    <% } %>
+  </div>
+
+  <!-- Fee -->
+  <div class="mb-3">
+    <label for="fee" class="form-label fw-semibold">Consultation Fee (₹)</label>
+    <input type="number" class="form-control" name="fee" id="fee" value="<%= doctor.fee %>" required>
+    <% if (error?.details?.find(e => e.context.key === 'fee')) { %>
+      <p class="text-danger text-sm mt-1"><%= error.details.find(e => e.context.key === 'fee').message %></p>
+    <% } %>
+  </div>
+
+  <!-- Consultation Type -->
+  <div class="mb-3">
+    <label for="consultationType" class="form-label fw-semibold">Consultation Type</label>
+    <select class="form-select" name="consultationType" id="consultationType" required>
+      <option value="in-person" <%= doctor.consultationType === 'in-person' ? 'selected' : '' %>>In-Person</option>
+      <option value="video-call" <%= doctor.consultationType === 'video-call' ? 'selected' : '' %>>Video Call</option>
+    </select>
+    <% if (error?.details?.find(e => e.context.key === 'consultationType')) { %>
+      <p class="text-danger text-sm mt-1"><%= error.details.find(e => e.context.key === 'consultationType').message %></p>
+    <% } %>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary px-4 fw-semibold shadow-sm">💾 Save Changes</button>
+  </div>
+</form>

@@ -1,0 +1,52 @@
+<% layout('layout/doctorLayout') %>
+
+<div class="container py-5">
+  <div class="bg-white shadow rounded-4 p-4 p-md-5 mx-auto" style="max-width: 800px;">
+    
+    <!-- Profile Image and Name -->
+    <div class="text-center mb-4">
+      <img src="<%= doctor.image %>" alt="Doctor Image" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
+      <h3 class="mt-3 fw-bold text-primary"><i class="bi bi-person-circle me-2"></i>Dr. <%= doctor.name %></h3>
+    </div>
+
+    <!-- Section: Basic Information -->
+    <div class="mb-4">
+      <h5 class="fw-semibold border-bottom pb-2 text-secondary">👤 Basic Information</h5>
+      <p><strong>Email:</strong> <%= doctor.email %></p>
+      <p><strong>Phone:</strong> <%= doctor.phone %></p>
+    </div>
+
+    <!-- Section: Professional Info -->
+    <div class="mb-4">
+      <h5 class="fw-semibold border-bottom pb-2 text-secondary">🩺 Professional Details</h5>
+      <p><strong>Specialty:</strong> <%= doctor.specialty %></p>
+      <p><strong>Experience:</strong> <%= doctor.experience %> years</p>
+      <p><strong>Consultation Type:</strong> <%= doctor.consultationType === 'in-person' ? 'In-Person' : 'Video Call' %></p>
+      <p><strong>Consultation Fee:</strong> ₹<%= doctor.fee %></p>
+    </div>
+
+    <!-- Section: Availability -->
+    <div class="mb-4">
+      <h5 class="fw-semibold border-bottom pb-2 text-secondary">📅 Available Slots</h5>
+      <% if (doctor.availableSlots.length > 0) { %>
+        <ul class="list-unstyled">
+          <% doctor.availableSlots.forEach(slot => { %>
+            <li>🕒 <%= new Date(slot).toLocaleString() %></li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p class="text-muted">No available slots listed.</p>
+      <% } %>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="text-center mt-5">
+      <a href="/doctors/<%= doctor._id %>/edit" class="btn btn-outline-primary px-4 me-3 rounded-pill shadow-sm">
+        ✏️ Edit Profile
+      </a>
+      <a href="/doctors/<%= doctor._id %>/patients" class="btn btn-outline-success px-4 rounded-pill shadow-sm">
+        👥 View Patients
+      </a>
+    </div>
+  </div>
+</div>
