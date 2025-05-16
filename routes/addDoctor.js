@@ -1,12 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const Doctor = require('../models/doctor'); // Adjust path as per your project structure
-const User = require('../models/user'); // patients come from here
+const Doctor = require('../models/doctor'); 
+const User = require('../models/user'); 
 const authMiddle = require("../middleware/authMiddle");
 const multer = require('multer');
 const path = require('path');
 const methodOverride = require('method-override');
-const Appointment = require('../models/appointment'); // Assuming you have an Appointment model
+const Appointment = require('../models/appointment'); 
 const wrapAsync = require('../utils/wrapAsync');
 const { doctorSchema } = require("../utils/schema");
 const {
@@ -76,7 +76,7 @@ router.post('/add', authMiddle, upload.single('image'),validateAddDoctor, wrapAs
         const currentDate = new Date();
         const validSlots = formattedSlots.filter(slot => slot > currentDate);
 
-        // ✅ Get image path
+        // Get image path
         const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
         const newDoctor = new Doctor({
@@ -88,8 +88,8 @@ router.post('/add', authMiddle, upload.single('image'),validateAddDoctor, wrapAs
             consultationType,
             fee,
             availableSlots: validSlots,
-            image: imagePath, // ✅ Save image path
-            user: userId // 👈 Save the user ID here
+            image: imagePath, // Save image path
+            user: userId //  Save the user ID here
         });
 
         await newDoctor.save();

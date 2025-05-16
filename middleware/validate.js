@@ -69,7 +69,7 @@ const validateEditDoctor = (req, res, next) => {
   next();
 };
 
-// ✅ Correctly export all middleware in one go
+//  Correctly export all middleware in one go
 module.exports = {
   validateSchema,
   validateAddDoctor,

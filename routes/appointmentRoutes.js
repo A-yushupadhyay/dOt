@@ -16,7 +16,7 @@ const router = express.Router();
 router.post('/book', authMiddle, wrapAsync(async (req, res) => {
     try {
         const { doctorId, date ,isVideoCall } = req.body;
-        const patientId = req.user._id; // ✅ Use `_id` instead of `id`
+        const patientId = req.user._id; // Use `_id` instead of `id`
 
         // add link 
         const videoCall = isVideoCall === "on"; // Convert checkbox value to boolean

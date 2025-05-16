@@ -9,7 +9,7 @@ const engine = require("ejs-mate");
 const axios = require("axios");
 
 
-// ============= 🛠️ Route Imports =============
+// Route Imports 
 const AuthUser = require("./routes/authRoutes");
 const addDoctor = require("./routes/addDoctor");
 const appRoute = require("./routes/appointmentRoutes");
@@ -23,7 +23,7 @@ const footerRoutes = require("./routes/footer");
 
 const AppError = require("./utils/AppError");
 
-// ============= 🔐 Security & Middleware Setup =============
+//  Security & Middleware Setup 
 app.engine("ejs", engine);
 app.set("view engine", "ejs");
 app.use('/views', express.static(path.join(__dirname, 'views')));
@@ -32,11 +32,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.set('trust proxy', true);
 
 
 
 
-// ✅ Redirect HTTP to HTTPS in production
+//  Redirect HTTP to HTTPS in production
 if (process.env.NODE_ENV === 'production') {
    app.use((req, res, next) => {
       if (req.headers['x-forwarded-proto'] !== 'https') {
@@ -46,7 +47,7 @@ if (process.env.NODE_ENV === 'production') {
    });
 }
 
-// ============= 🌟 Global Locals for EJS =============
+//  Global Locals for EJS 
 app.use((req, res, next) => {
    res.locals.currentUser = req.user || null; 
    res.locals.showWelcome = !req.cookies.welcomeShown;
@@ -60,7 +61,7 @@ app.use((req, res, next) => {
 
 
 
-// ============= 🌐 Routes =============
+// Routes 
 app.use('/', basicRoutes);
 app.use('/user', AuthUser);
 app.use('/doctors', addDoctor);
@@ -73,8 +74,8 @@ app.use('/nav', navRoutes);
 app.use('/footer' , footerRoutes);
 
 
-// ============= 💾 MongoDB Connection =============
-const MONGOURL = process.env.MONGO_URL || 'mongodb://localhost:27017/docONtime';
+// MongoDB Connection 
+const MONGOURL = process.env.MONGO_URL;
 mongoose.connect(MONGOURL)
    .then(() => console.log("✅ Connected to MongoDB"))
    .catch(err => {
@@ -82,7 +83,7 @@ mongoose.connect(MONGOURL)
       process.exit(1);
    });
 
-// ============= 🔍 404 Handler =============
+// 404 Handler
 app.use((req, res) => {
    if (res.headersSent) return;
    res.status(404).render("error/404", {
@@ -90,7 +91,7 @@ app.use((req, res) => {
    });
  });
 
-// ============= 🔥 Error Handling Middleware (500) =============
+//  Error Handling Middleware (500) 
 app.use((err, req, res, next) => {
    console.error("❌ Unhandled Error:", err);
    if (res.headersSent) return;
@@ -98,13 +99,13 @@ app.use((err, req, res, next) => {
 });
 
 
-// ============= 🚀 Start Server =============
+//  Start Server 
 const PORT = process.env.PORT || 8000;
 const server = app.listen(PORT, () => {
    console.log(`🚀 Server running on port ${PORT}`);
 });
 
-// ============= 🔐 Unhandled Errors =============
+
 
 
 
