@@ -2,5 +2,9 @@
 <div class="text-center py-10">
   <h1 class="text-4xl font-bold text-red-600">500 - Server Error</h1>
   <p class="text-lg text-gray-700 mt-4"><%= error %></p>
-  <a href="/home" class="mt-6 inline-block px-4 py-2 bg-blue-600 text-white rounded">Go to Home</a>
+   <% if (currentUser) { %>
+    <a href="/home" class="mt-6 inline-block px-4 py-2 bg-blue-600 text-white rounded">Go to Home</a>
+  <% } else { %>
+    <a href="/user/login" class="mt-6 inline-block px-4 py-2 bg-blue-600 text-white rounded">Login to Continue</a>
+  <% } %>
 </div>
