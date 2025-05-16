@@ -154,7 +154,7 @@ router.get("/:id", authMiddle, wrapAsync(async (req, res) => {
 // GET route to render the Edit Doctor page
 router.get('/:id/edit', authMiddle, wrapAsync(async (req, res) => {
     const doctor = await Doctor.findById(req.params.id);
-    res.render('doctor/editDoctor', { doctor, title: 'Edit Doctor', error: validationError || null, doctorData: {} });
+    res.render('doctor/editDoctor', { doctor, title: 'Edit Doctor', error: null, doctorData: {} });
 }));
 
 // PUT route to update Doctor details
@@ -181,7 +181,7 @@ router.put('/:id', authMiddle, upload.single('image'), validateEditDoctor, wrapA
 
     // Save updated doctor details
     await doctor.save();
-    res.redirect(`/doctors/${doctor._id}`,{title:'Doctor Profile '}); // Redirect to the doctor's updated profile page
+    res.redirect(`/doctors/${doctor._id}`); // Redirect to the doctor's updated profile page
 }));
 
 // GET route for Patients of Doctor page
