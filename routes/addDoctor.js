@@ -157,8 +157,9 @@ router.get('/:id/edit', authMiddle, wrapAsync(async (req, res) => {
     res.render('doctor/editDoctor', { doctor, title: 'Edit Doctor', error: null, doctorData: {} });
 }));
 
-// PUT route to update Doctor details
-router.put('/:id', authMiddle, upload.single('image'), validateEditDoctor, wrapAsync(async (req, res) => {
+// put is not working , so we use post route to update Doctor details
+router.post('/:id/edit', authMiddle, upload.single('image'),validateEditDoctor, wrapAsync(async (req, res) => {
+    console.log("Request Body in PUT:", req.body);
     const doctor = await Doctor.findById(req.params.id);
 
     if (!doctor) {

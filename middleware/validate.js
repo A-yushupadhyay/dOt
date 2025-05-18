@@ -4,6 +4,7 @@ const {
   addDoctorSchema,
   editDoctorSchema
 } = require("../utils/schema");
+const Doctor = require("../models/doctor");
 
 
 
@@ -55,20 +56,28 @@ const validateAddDoctor = (req, res, next) => {
   next();
 };
 
-const validateEditDoctor = (req, res, next) => {
-  console.log("Request Body in validateEditDoctor:", req.body);
-  console.log("i am in validateEditDoctor");
+const validateEditDoctor = async (req, res, next) => {
+
+
   const { error } = editDoctorSchema.validate(req.body);
+
   if (error) {
-    return res.status(400).render("doctor/editDoctor", {
-      title: "Edit Doctor",
-      error: error.details[0].message,
-      formData: req.body
-    });
+    try {
+      const doctor = await Doctor.findById(req.params.id);
+
+      return res.status(400).render("doctor/editDoctor", {
+        title: "Edit Doctor",
+        doctor,
+        error: error.details[0].message,
+        formData: req.body, // optional if you want to reuse input
+      });
+    } catch (fetchError) {
+      return res.status(500).send("Internal Server Error");
+    }
   }
+
   next();
 };
-
 //  Correctly export all middleware in one go
 module.exports = {
   validateSchema,

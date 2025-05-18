@@ -2,7 +2,9 @@
 
 <h2 class="text-center text-primary fw-bold mb-4">✏️ Edit Profile</h2>
 
-<form action="/doctors/<%= doctor._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+<form action="/doctors/<%= doctor._id %>/edit" method="POST" enctype="multipart/form-data">
+ 
+
   <!-- Image Upload -->
   <div class="mb-3 text-center">
     <img src="<%= doctor.image %>" alt="Doctor Image" class="rounded-circle shadow mb-3" style="width: 100px; height: 100px; object-fit: cover;">
