@@ -9,7 +9,7 @@ const generateVideoCallLink = require("../utils/vedioCallUtils");
 const updateUserToken = require("../utils/updateUserToken");
 const multer = require('multer');
 const path = require('path');
-const methodOverride = require('method-override');
+
 const { title } = require('process');
  // Assuming you have an Appointment model
 const jwt = require('jsonwebtoken');

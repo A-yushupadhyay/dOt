@@ -5,7 +5,7 @@ const User = require('../models/user');
 const authMiddle = require("../middleware/authMiddle");
 const multer = require('multer');
 const path = require('path');
-const methodOverride = require('method-override');
+
 const Appointment = require('../models/appointment'); 
 const wrapAsync = require('../utils/wrapAsync');
 const { doctorSchema } = require("../utils/schema");
@@ -20,7 +20,7 @@ const {
 const router = express.Router();
 
 // Use method-override to support PUT and DELETE requests in forms
-router.use(methodOverride('_method'));
+
 
 // Multer Setup for Image Upload
 const storage = multer.diskStorage({
@@ -158,7 +158,7 @@ router.get('/:id/edit', authMiddle, wrapAsync(async (req, res) => {
 }));
 
 // put is not working , so we use post route to update Doctor details
-router.post('/:id/edit', authMiddle, upload.single('image'),validateEditDoctor, wrapAsync(async (req, res) => {
+router.post('/:id/edit', authMiddle, upload.single('image'), wrapAsync(async (req, res) => {
     console.log("Request Body in PUT:", req.body);
     const doctor = await Doctor.findById(req.params.id);
 
